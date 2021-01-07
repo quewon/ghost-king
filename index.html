@@ -32,9 +32,9 @@
 	<script>
 		var kid;
 		var kid_colors = {
-			kitty: "#FEEE99",
-			pup: "#99FEEE",
-			bird: "#EE99FE"
+			kitty: "#fff49d",
+			pup: "#9dceff",
+			bird: "#ff9db7"
 		}
 
 		var char_info = document.getElementById("character_info");
@@ -66,6 +66,7 @@
 			transition(kid_colors[kid], game);
 			menu.innerHTML = kid_menu[kid];
 			print(kid, 1, window.event);
+			document.querySelector("title").textContent = kid;
 			animate();
 		}
 

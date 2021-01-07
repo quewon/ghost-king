@@ -31,8 +31,8 @@
 }
 .stopped::after, .stopped::before {
   transition: 0;
-  width: 0;
-  height: 0;
+  width: 0 !important;
+  height: 0 !important;
 }
 .stopped:hover {
   cursor: default;
@@ -51,12 +51,6 @@ body {
   display: none;
   color: var(--primary);
   animation: fade-in 3s;
-  text-align: left;
-}
-
-#menu {
-  margin-bottom: var(--margin-size);
-  border-bottom: 1px solid var(--primary);
   text-align: left;
 }
 
@@ -137,7 +131,6 @@ button, div {
 
 button {
   margin-bottom: var(--margin-size);
-  margin-right: var(--margin-size);
   font-family: inherit;
   font-size: inherit;
   background: var(--background);
@@ -152,6 +145,25 @@ button {
   z-index: 0;
   width: var(--button-width);
   height: var(--button-height);
+}
+
+#menu button {
+  height: calc(var(--button-height) / 1.5);;
+  width: calc(50% - var(--margin-size) / 2);
+}
+#menu button::after {
+  width: 240px;
+  height: calc(var(--button-height) / 1.5 - 15px);
+}
+#menu button::before {
+  width: calc(240px - 15px);
+  height: calc(var(--button-height) / 1.5);
+}
+#menu button:hover::before, button:focus::before {
+  width: 0px;
+}
+#menu button:hover::after, button:focus::after {
+  height: 0px;
 }
 
 #game button:focus {
