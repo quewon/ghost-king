@@ -14,6 +14,17 @@
   --highlight: var(--secondary);
 }
 
+@media only screen and (max-device-width: 480px) {
+  :root {
+    --container-width: 95%;
+    --font-size: 30px;
+    --button-width: 250px;
+  }
+
+  .container {
+    transform: translate(-50%, -80%) !important;
+  }
+}
 
 .whispers {
 
@@ -61,7 +72,7 @@ a:hover, a:focus {
 
 .tbox {
   margin-top: var(--margin-size);
-  border: 1px dotted var(--primary);
+  border: 1px solid var(--secondary);
   padding: var(--margin-size);
   width: 100%;
   animation: flicker-in-1 1s linear both;
@@ -84,6 +95,10 @@ a:hover, a:focus {
   transform: translate(-50%,-50%);
   color: var(--primary);
   text-align: center;
+}
+
+#character_selection {
+  min-height: calc(3 * var(--button-height) + 2 * var(--margin-size));
 }
 
 h1 {
