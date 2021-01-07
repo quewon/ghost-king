@@ -1,3 +1,9 @@
+var kid_menu = {
+	kitty: `<button onclick="print('kitty',1)">walk</button><button>listen</button>`,
+	pup: `<button>walk</button><button>fight</button>`,
+	bird: `<button>walk</button><button>handbook</button>`
+}
+
 var kid_info = {
 	kitty: `<mark>kitty</mark>
 			<br /><br />
@@ -19,16 +25,8 @@ var kid_info = {
 var DIALOG = {};
 DIALOG.kitty = [
 	0,
-	`there is nothing around for miles<<
-	<br /><br /><em>click to continue</em>`,
-	`only [[t: kitty]]you[[/t]]<<`,
-	`only heat<<`,
-	`only water running under your feet<<`,
-	`the ghosts<<`,
-	'they led you here<<',
-	`what will you find?<<`,
-	`what will you hear?
-	<br /><br /><button>listen</button>[[stop]]`,
+	`there is nothing around for miles. only [[t: kitty]]you[[/t]], only heat, only water running under your feet.<<`,
+	`the ghosts, they led you here. what will you find, you wonder, what will you hear?[[stop]]`,
 ];
 
 var TOOLTIP = {

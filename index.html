@@ -2,24 +2,29 @@
 <html>
 
 	<head>
-		<title>GHOST KING</title>
+		<title>boo</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 
 	<body>
 		<div id="curtain"></div>
 		<div id="chars" class="container">
-			<h1>GHOST KING</h1>
+			<h1>ghost club blues</h1>
 			<div id="character_selection">
 				<button onclick="selectKid('kitty')">kitty</button>
-				<!-- <button onclick="selectKid('pup')">pup</button>
-				<button onclick="selectKid('bird')">bird</button> -->
+				<button onclick="selectKid('pup')"><p>pup<br />
+					<i>coming soon!</i></p></button>
+				<button onclick="selectKid('bird')"><p>bird<br />
+					<i>coming soon!</i></p></button>
 				<button id="play_button" class="button_secondary" onclick="play()">play as&nbsp;<span id="name"></span></button>
 			</div>
 			<div id="character_info"></div>
 		</div>
 		<div id="game" class="container">
-			<span id="dialogue"></span>
+			<div>
+				<div id="menu"></div>
+				<span id="dialogue"></span>
+			</div>
 		</div>
 	</body>
 
@@ -34,6 +39,7 @@
 
 		var char_info = document.getElementById("character_info");
 		var game = document.getElementById("game");
+		var menu = document.getElementById("menu");
 		var root = document.documentElement;
 
 		window.oncontextmenu = function() {
@@ -58,26 +64,8 @@
 		var stopped = false;
 		function play() {
 			transition(kid_colors[kid], game);
+			menu.innerHTML = kid_menu[kid];
 			print(kid, 1, window.event);
-			setTimeout(function() {
-				document.onclick = function(e) {
-					if (stopped) { return }
-					print(kid, 1, e)
-				};
-				document.oncontextmenu = function(e) {
-					print(kid, -1, e);
-					return false
-				};
-				document.addEventListener("keyup", function(e) {
-					let k = e.keyCode;
-					if (k==32 || k==39) {
-						if (stopped) { return }
-						print(kid, 1, e)
-					} else if (k==37) {
-						print(kid, -1, e)
-					}
-				})
-			}, 4000);
 			animate();
 		}
 
@@ -97,18 +85,15 @@
 
 		var dialogue = document.getElementById("dialogue");
 		function print(kid, step, e) {
-			while (game.childNodes.length > 2) {
-				game.removeChild(game.lastChild)
-			}
+			cleart();
 
 			if (DIALOG[kid][0]+step > 0) {
 				DIALOG[kid][0] += step;
 			}
 			let i = DIALOG[kid][0];
 			let d = DIALOG[kid][i];
-			d = d.replace("<<", "<span class='caret'><</span>");
+			d = d.replace("<<", "<span class='caret'> ...</span>");
 			if (d.includes('[[stop]]')) {
-				console.log(d);
 				d = d.replace("[[stop]]", "");
 				togglePrinting();
 			} else if (stopped) {
@@ -124,6 +109,12 @@
 
 		function togglePrinting() {
 			stopped = !stopped;
+
+			if (stopped) {
+				menu.querySelector("button").classList.add("stopped");
+			} else {
+				menu.querySelector("button").classList.remove("stopped");
+			}
 		}
 
 		function t(label) {
@@ -135,6 +126,7 @@
 				tbox.className = "tbox";
 				tbox.innerHTML = TOOLTIP[label];
 				current_container.appendChild(tbox);
+				tbox.onclick = function(e){ this.remove() };
 			}
 			event.cancelBubble = true;
 		}
