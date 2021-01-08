@@ -22,10 +22,6 @@
   }
 }
 
-.whispers {
-
-}
-
 .stopped {
   opacity: 0.5;
 }
@@ -36,6 +32,19 @@
 }
 .stopped:hover {
   cursor: default;
+}
+
+.static {
+  cursor: default;
+}
+.static::after, .static::before {
+  background: none;
+  transition: 0;
+}
+.static:hover::after, .static:focus::after, .static:hover::before, .static:focus::before {
+  width: 0;
+  height: 0;
+  background: none;
 }
 
 
@@ -60,6 +69,27 @@ body {
 
 #game a:hover, a:focus {
   background-color: var(--background);
+}
+
+#menu {
+  display: inline-block;
+  padding-top: var(--margin-size);
+  width: 50%;
+}
+
+#menu_tooltip {
+  position: absolute;
+  padding-top: var(--margin-size);
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+  font-style: italic;
+}
+
+#dialogue {
+  height: calc(var(--container-width) / 1.5);
+  padding: var(--margin-size);
+  border: 1px solid var(--primary);
 }
 
 a {
@@ -148,16 +178,17 @@ button {
 }
 
 #menu button {
-  height: calc(var(--button-height) / 1.5);;
-  width: calc(50% - var(--margin-size) / 2);
+  height: calc(2 * var(--margin-size));
+  width: calc(2 * var(--margin-size));
+  margin-right: var(--margin-size);
 }
 #menu button::after {
-  width: 240px;
-  height: calc(var(--button-height) / 1.5 - 15px);
+  width: calc(2 * var(--margin-size));
+  height: calc(2 * var(--margin-size) - 15px);
 }
 #menu button::before {
-  width: calc(240px - 15px);
-  height: calc(var(--button-height) / 1.5);
+  width: calc(2 * var(--margin-size) - 15px);
+  height: calc(2 * var(--margin-size));
 }
 #menu button:hover::before, button:focus::before {
   width: 0px;

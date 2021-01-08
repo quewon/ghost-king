@@ -2,6 +2,7 @@
 <html>
 
 	<head>
+		<meta charset="UTF-8">
 		<title>boo</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
@@ -21,25 +22,35 @@
 			<div id="character_info"></div>
 		</div>
 		<div id="game" class="container">
-			<div>
-				<div id="menu"></div>
-				<span id="dialogue"></span>
-			</div>
+			<div id="scene_name"></div>
+			<div id="dialogue"></div>
+			<div id="menu"></div><div id="menu_tooltip"></div>
 		</div>
 	</body>
 
+	<script src="icons.js"></script>
 	<script src="dialog.js"></script>
+	<script src="objects.js"></script>
 	<script>
 		var kid;
+		var inventory = {
+			kitty: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH]
+		};
 		var kid_colors = {
 			kitty: "#fff49d",
 			pup: "#9dceff",
 			bird: "#ff9db7"
-		}
+		};
+		var kid_colors_strong = {
+			kitty: "#ffe24f",
+			pup: "#4fcdff",
+			bird: "#ff4f90"
+		};
 
 		var char_info = document.getElementById("character_info");
 		var game = document.getElementById("game");
 		var menu = document.getElementById("menu");
+		var menu_tooltip = document.getElementById("menu_tooltip");
 		var root = document.documentElement;
 
 		window.oncontextmenu = function() {
@@ -61,10 +72,12 @@
 			document.getElementById("name").textContent = name;
 		}
 
-		var stopped = false;
 		function play() {
 			transition(kid_colors[kid], game);
-			menu.innerHTML = kid_menu[kid];
+			let menu = kid_menu[kid];
+			for (let i=0; i<menu.length; i++) {
+				printMenuIcon(kid_menu[kid][i])
+			}
 			print(kid, 1, window.event);
 			document.querySelector("title").textContent = kid;
 			animate();
@@ -94,12 +107,6 @@
 			let i = DIALOG[kid][0];
 			let d = DIALOG[kid][i];
 			d = d.replace("<<", "<span class='caret'> ...</span>");
-			if (d.includes('[[stop]]')) {
-				d = d.replace("[[stop]]", "");
-				togglePrinting();
-			} else if (stopped) {
-				togglePrinting();
-			}
 			if (d.includes('[[t: ')) {
 				d = d.replace("[[t: ", `<a onclick="t('`);
 				d = d.replace("]]", `')">`)
@@ -108,14 +115,25 @@
 			dialogue.innerHTML = d;
 		}
 
-		function togglePrinting() {
-			stopped = !stopped;
-
-			if (stopped) {
-				menu.querySelector("button").classList.add("stopped");
-			} else {
-				menu.querySelector("button").classList.remove("stopped");
+		function printMenuIcon(icon) {
+			var button = document.createElement("button");
+			button.textContent = icon.name;
+			let tooltip = icon.tooltip;
+			if (typeof icon.tooltip === 'function') {
+				tooltip = icon.tooltip()
 			}
+			button.onmouseover = function() {
+				menu_tooltip.textContent = tooltip;
+			}
+			button.onmouseout = function() {
+				menu_tooltip.textContent = "";
+			}
+			if ('function' in icon) {
+				button.onclick = icon.function;
+			} else {
+				button.className = "static"
+			}
+			menu.appendChild(button);
 		}
 
 		function t(label) {
@@ -126,7 +144,11 @@
 				let tbox = document.createElement("div");
 				tbox.className = "tbox";
 				tbox.innerHTML = TOOLTIP[label];
-				current_container.appendChild(tbox);
+				if (current_container==game) {
+					dialogue.appendChild(tbox);
+				} else {
+					current_container.appendChild(tbox);
+				}
 				tbox.onclick = function(e){ this.remove() };
 			}
 			event.cancelBubble = true;

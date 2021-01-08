@@ -1,9 +1,3 @@
-var kid_menu = {
-	kitty: `<button onclick="print(kid,1)" style="margin-right:var(--margin-size)">walk</button><button>listen</button>`,
-	pup: `<button onclick="print(kid,1)" style="margin-right:var(--margin-size)">walk</button><button>fight</button>`,
-	bird: `<button onclick="print(kid,1)" style="margin-right:var(--margin-size)">walk</button><button>handbook</button>`
-}
-
 var kid_info = {
 	kitty: `<mark>kitty</mark>
 			<br /><br />
@@ -22,11 +16,17 @@ var kid_info = {
 			inventory: <a onclick="t('necromancershandbook')">the necromancer's handbook</a>, four warm unwrapped <a onclick="t('icecreamsandwiches')">ice cream sandwiches</a>, the quill of Sa, and two erasable ballpoint pens`
 };
 
+var kid_menu = {
+	kitty: [ICON.inventory, ICON.listen],
+	pup: [ICON.inventory, "👊"],
+	bird: [ICON.inventory, "📓"]
+};
+
 var DIALOG = {};
 DIALOG.kitty = [
 	0,
 	`there is nothing around for miles. only [[t: kitty]]you[[/t]], and this heat, and the water running under your feet.<br /><br />
-	the ghosts, they led you here. what will you find, you wonder, what will you hear?<<`,
+	the ghosts, they led you here. what will you find, you wonder, what will you hear?`,
 ];
 
 var TOOLTIP = {
