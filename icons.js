@@ -3,6 +3,10 @@ var ICON = {
 		name: "🎒",
 		tooltip: "check inventory",
 		function: function() {
+			if (kids[kids.current].inventory.length==0) {
+				t("inventory: empty");
+				return
+			}
 			output = parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>";
 			t(output)
 		}
@@ -50,6 +54,7 @@ function inWords(num) {
 
 function parseList(t, list) {
 	let inv = {};
+
 	for (let i=0; i<list.length; i++) {
 		if (!(list[i].name in inv)) {
 			inv[list[i].name] = [1, list[i], i];

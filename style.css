@@ -15,14 +15,6 @@
   --highlight-dark: var(--secondary);
 }
 
-@media only screen and (max-device-width: 480px) {
-  :root {
-    --container-width: 95%;
-    --font-size: 30px;
-    --button-width: 250px;
-  }
-}
-
 .stopped {
   opacity: 0.5;
 }

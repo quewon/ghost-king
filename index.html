@@ -177,13 +177,22 @@
 			kids[kids.current].inventory.push(kids[kids.current].scene.objects[index]);
 			kids[kids.current].scene.objects.splice(index, 1);
 			setScene();
+			if (kids[kids.current].inventory.length==0) {
+				t("inventory: empty");
+				return
+			}
 			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>");
 		}
 
 		function dropItem(index) {
+			if (current_container != game) { return }
 			kids[kids.current].scene.objects.push(kids[kids.current].inventory[index]);
 			kids[kids.current].inventory.splice(index, 1);
 			setScene();
+			if (kids[kids.current].inventory.length==0) {
+				t("inventory: empty");
+				return
+			}
 			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>");
 		}
 
