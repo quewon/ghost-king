@@ -18,16 +18,9 @@ var kid_info = {
 
 var kid_menu = {
 	kitty: [ICON.inventory, ICON.listen],
-	pup: [ICON.inventory, "👊"],
-	bird: [ICON.inventory, "📓"]
+	pup: [ICON.inventory, ICON.fight],
+	bird: [ICON.inventory, ICON.handbook]
 };
-
-var DIALOG = {};
-DIALOG.kitty = [
-	0,
-	`there is nothing around for miles. only [[t: kitty]]you[[/t]], and this heat, and the water running under your feet.<br /><br />
-	the ghosts, they led you here. what will you find, you wonder, what will you hear?`,
-];
 
 var TOOLTIP = {
 	kittyglowsticks: `you're never fully geared up without these. someone once asked you why you've always got one with you: is it a fear of darkness or do you just like the glow? you've never thought about it.`,

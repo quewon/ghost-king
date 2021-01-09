@@ -1,13 +1,28 @@
 var ICON = {
 	inventory: {
 		name: "🎒",
-		tooltip: function() { return parseList(inventory.kitty) }
+		tooltip: function() { return parseList("inventory", kids[kids.current].inventory) }
 	},
 	listen: {
 		name: "👂",
 		tooltip: "tune into the ghosts",
 		function: function() {
 			console.log("listening")
+		}
+	},
+	fight: {
+		name: "👊",
+		tooltip: "pick a fight",
+		function: function() {
+			console.log("fight")
+		}
+	},
+	handbook: {
+		name: "📓",
+		tooltip: "look up an entry in the necromancer's handbook",
+		function: function() {
+			//toggle handbook
+			console.log("handbook")
 		}
 	}
 };
@@ -29,7 +44,7 @@ function inWords(num) {
     return str;
 }
 
-function parseList(list) {
+function parseList(t, list) {
 	let inv = {};
 	for (let i=0; i<list.length; i++) {
 		if (!(list[i].name in inv)) {
@@ -38,7 +53,7 @@ function parseList(list) {
 			inv[list[i].name]++
 		}
 	}
-	let output = "";
+	let output = t+": ";
 	let keys = Object.keys(inv);
 	for (let i=0; i<keys.length; i++) {
 		let k = keys[i];

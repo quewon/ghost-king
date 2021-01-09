@@ -31,22 +31,8 @@
 	<script src="icons.js"></script>
 	<script src="dialog.js"></script>
 	<script src="objects.js"></script>
+	<script src="scenes.js"></script>
 	<script>
-		var kid;
-		var inventory = {
-			kitty: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH]
-		};
-		var kid_colors = {
-			kitty: "#fff49d",
-			pup: "#9dceff",
-			bird: "#ff9db7"
-		};
-		var kid_colors_strong = {
-			kitty: "#ffe24f",
-			pup: "#4fcdff",
-			bird: "#ff4f90"
-		};
-
 		var char_info = document.getElementById("character_info");
 		var game = document.getElementById("game");
 		var menu = document.getElementById("menu");
@@ -58,14 +44,14 @@
 		};
 
 		function selectKid(name) {
-			kid = name;
+			kids.current = name;
 			char_info.style.display = "inline-block";
 			char_info.className = "info_enter";
-			char_info.innerHTML = kid_info[name];
+			char_info.innerHTML = kids[name].info;
 
 			document.getElementById("play_button").style.display = "flex";
 			document.getElementById("play_button").className = "button_secondary flicker-in";
-			root.style.setProperty("--highlight", kid_colors[name]);
+			root.style.setProperty("--highlight", kids[name].bgcolor);
 
 			cleart();
 
@@ -73,13 +59,13 @@
 		}
 
 		function play() {
-			transition(kid_colors[kid], game);
-			let menu = kid_menu[kid];
+			transition(kids[kids.current].bgcolor, game);
+			let menu = kids[kids.current].menu;
 			for (let i=0; i<menu.length; i++) {
-				printMenuIcon(kid_menu[kid][i])
+				printMenuIcon(kids[kids.current].menu[i])
 			}
-			print(kid, 1, window.event);
-			document.querySelector("title").textContent = kid;
+			setScene();
+			document.querySelector("title").textContent = kids.current;
 			animate();
 		}
 
@@ -98,21 +84,29 @@
 		}
 
 		var dialogue = document.getElementById("dialogue");
-		function print(kid, step, e) {
-			cleart();
+		var scene_name = document.getElementById("scene_name");
+		function setScene() {
+			let scene = kids[kids.current].scene;
+			scene_name.innerHTML = scene.sceneobject.name;
 
-			if (DIALOG[kid][0]+step > 0) {
-				DIALOG[kid][0] += step;
+			let scenecontent = scene.sceneobject.line;
+			for (let i=0; i<scene.objects.length; i++) {
+				let line = setObject(scene.objects[i]);
+				scenecontent += line + " ";
 			}
-			let i = DIALOG[kid][0];
-			let d = DIALOG[kid][i];
-			d = d.replace("<<", "<span class='caret'> ...</span>");
-			if (d.includes('[[t: ')) {
-				d = d.replace("[[t: ", `<a onclick="t('`);
-				d = d.replace("]]", `')">`)
-				d = d.replace("[[/t]]", `</a>`);
+
+			let sceneexits = "";
+			for (let i=0; i<scene.exits.length; i++) {
+				sceneexits += setObject(scene.exits[i]);
 			}
-			dialogue.innerHTML = d;
+
+			dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
+
+			if (!scene.visited) { scene.visited = true }
+
+			function setObject(obj) {
+				return obj.line || obj.name
+			}
 		}
 
 		function printMenuIcon(icon) {
@@ -130,8 +124,6 @@
 			}
 			if ('function' in icon) {
 				button.onclick = icon.function;
-			} else {
-				button.className = "static"
 			}
 			menu.appendChild(button);
 		}
