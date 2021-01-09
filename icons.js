@@ -3,7 +3,7 @@ var ICON = {
 		name: "🎒",
 		tooltip: "check inventory",
 		function: function() {
-			output = parseList("inventory", kids[kids.current].inventory);
+			output = parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>";
 			t(output)
 		}
 	},
@@ -52,7 +52,7 @@ function parseList(t, list) {
 	let inv = {};
 	for (let i=0; i<list.length; i++) {
 		if (!(list[i].name in inv)) {
-			inv[list[i].name] = [1, list[i]];
+			inv[list[i].name] = [1, list[i], i];
 		} else {
 			inv[list[i].name][0]++
 		}
@@ -65,6 +65,7 @@ function parseList(t, list) {
 			k = keys[i]+"s"
 		}
 
+		output += "<p oncontextmenu=\"dropItem('"+inv[keys[i]][2]+"');return false\">";
 		output += inWords(inv[keys[i]][0])
 		if (kids.current in inv[keys[i]][1]) {
 			let string = inv[keys[i]][1][kids.current];
@@ -78,6 +79,7 @@ function parseList(t, list) {
 		} else {
 			output += k;
 		}
+		output += "</p>";
 
 		if (i<keys.length-1) {
 			output += ", ";

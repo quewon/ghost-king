@@ -125,6 +125,9 @@
 		var dialogue = document.getElementById("dialogue");
 		var scene_name = document.getElementById("scene_name");
 		function setScene() {
+			//this is so broken_tooltips doesnt become a billion elements long
+			broken_tooltips = [];
+
 			let scene = kids[kids.current].scene;
 			scene_name.innerHTML = scene.sceneobject.name;
 
@@ -174,13 +177,14 @@
 			kids[kids.current].inventory.push(kids[kids.current].scene.objects[index]);
 			kids[kids.current].scene.objects.splice(index, 1);
 			setScene();
-			t(parseList("inventory", kids[kids.current].inventory));
+			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>");
 		}
 
 		function dropItem(index) {
 			kids[kids.current].scene.objects.push(kids[kids.current].inventory[index]);
 			kids[kids.current].inventory.splice(index, 1);
 			setScene();
+			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>");
 		}
 
 		function printMenuIcon(icon) {

@@ -43,6 +43,10 @@ body {
   margin: 0;
 }
 
+p {
+  display: inline;
+}
+
 #game {
   display: none;
   color: var(--primary);
@@ -77,6 +81,7 @@ body {
   display: inline-block;
   width: 50%;
   text-align: right;
+  font-style: italic
 }
 
 #dialogue {
@@ -103,12 +108,6 @@ a:hover, a:focus {
   -webkit-animation: flicker-in-1 1s linear both;
   text-align: left;
   cursor: pointer;
-}
-
-.caret {
-  display: inline;
-  animation: blink 400ms step-start infinite;
-  -webkit-animation: blink 400ms step-start infinite;
 }
 
 .container {
