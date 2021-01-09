@@ -12,7 +12,8 @@
 		<div id="chars" class="container">
 			<h1>ghost club blues</h1>
 			<div id="character_selection">
-				<button onclick="selectKid('kitty')">kitty</button>
+				<button onclick="selectKid('kitty')"><p>kitty<br />
+					<i>in progress</i></p></button>
 				<button onclick="selectKid('pup')"><p>pup<br />
 					<i>coming soon!</i></p></button>
 				<button onclick="selectKid('bird')"><p>bird<br />
@@ -28,11 +29,48 @@
 		</div>
 	</body>
 
-	<script src="icons.js"></script>
 	<script src="dialog.js"></script>
+	<script src="icons.js"></script>
 	<script src="objects.js"></script>
 	<script src="scenes.js"></script>
 	<script>
+		var kids = {
+			current: null,
+			kitty: {
+				menu: [ICON.inventory, ICON.listen],
+				inventory: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH],
+				bgcolor: "#fff49d",
+				strongcolor: "#ffe24f",
+				scene: SCENE.testroom
+			},
+			pup: {
+				menu: [ICON.inventory, ICON.fight],
+				inventory: [OBJECT.pHAMMER, OBJECT.kGLOWSTICK, OBJECT.iICECREAMSANDWICH],
+				bgcolor: "#9dceff",
+				strongcolor: "#4fcdff",
+				scene: SCENE.testroom
+			},
+			bird: {
+				menu: [ICON.inventory, ICON.handbook],
+				inventory: [OBJECT.bHANDBOOK, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.bQUILL, OBJECT.bPEN, OBJECT.bPEN],
+				bgcolor: "#ff9db7",
+				strongcolor: "#ff4f90",
+				scene: SCENE.testroom
+			}
+		}
+		kids.kitty.info = `<mark>kitty</mark>
+					<br /><br />
+					the ghost whisperer<br /><br />
+					age: 11<br /><br />`;
+		kids.pup.info = `<mark>pup</mark>
+					<br /><br />
+					<a onclick="t(DIALOGUE.exghosthunter)">ex ghost hunter</a><br /><br />
+					age: 13<br /><br />`;
+		kids.bird.info = `<mark>bird</mark>
+					<br /><br />
+					self-proclaimed ghost scholar<br /><br />
+					age: 12<br /><br />`;
+
 		var char_info = document.getElementById("character_info");
 		var game = document.getElementById("game");
 		var menu = document.getElementById("menu");
@@ -47,11 +85,12 @@
 			kids.current = name;
 			char_info.style.display = "inline-block";
 			char_info.className = "info_enter";
-			char_info.innerHTML = kids[name].info;
+			char_info.innerHTML = kids[name].info+parseList("inventory", kids[kids.current].inventory);
 
 			document.getElementById("play_button").style.display = "flex";
 			document.getElementById("play_button").className = "button_secondary flicker-in";
 			root.style.setProperty("--highlight", kids[name].bgcolor);
+			root.style.setProperty("--highlight-dark", kids[name].strongcolor);
 
 			cleart();
 
@@ -89,33 +128,65 @@
 			let scene = kids[kids.current].scene;
 			scene_name.innerHTML = scene.sceneobject.name;
 
-			let scenecontent = setObject(scene.sceneobject);
+			let scenecontent = setObject(scene.sceneobject, "scene")+" ";
 			for (let i=0; i<scene.objects.length; i++) {
-				let line = setObject(scene.objects[i]);
+				let line = setObject(scene.objects[i], "item", i);
 				scenecontent += line + " ";
 			}
 
 			let sceneexits = "";
 			for (let i=0; i<scene.exits.length; i++) {
-				sceneexits += setObject(scene.exits[i]);
+				sceneexits += setObject(scene.exits[i], "exit");
 			}
 
 			dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
 
 			if (!scene.visited) { scene.visited = true }
 
-			function setObject(obj) {
-				return obj.line || obj.name
+			function setObject(obj, type, index) {
+				let l = obj.line;
+
+				switch(type) {
+					case "scene":
+						if (kids.current in obj) {
+							l = l.replace(`[`, `<a onclick="t('`+obj[kids.current]+`')">`);
+							l = l.replace(`]`, `</a>`);
+						} else {
+							l = l.replace(`[`, ``);
+							l = l.replace(`]`, ``);
+						}
+						break;
+					case "item":
+						l = l.replace(`[`, `<a onclick="pickUp(`+index+`)">`);
+						l = l.replace(`]`, `</a>`);
+						break;
+					case "exit":
+						l = l.replace(`]`, `</mark>`);
+						l = l.replace("[", `<mark onclick="kids[kids.current].scene=SCENE['`+obj.destination+`'];setScene()">`);
+						break;
+				}
+
+				return l
 			}
+		}
+
+		function pickUp(index) {
+			kids[kids.current].inventory.push(kids[kids.current].scene.objects[index]);
+			kids[kids.current].scene.objects.splice(index, 1);
+			setScene();
+			t(parseList("inventory", kids[kids.current].inventory));
+		}
+
+		function dropItem(index) {
+			kids[kids.current].scene.objects.push(kids[kids.current].inventory[index]);
+			kids[kids.current].inventory.splice(index, 1);
+			setScene();
 		}
 
 		function printMenuIcon(icon) {
 			var button = document.createElement("button");
 			button.textContent = icon.name;
 			let tooltip = icon.tooltip;
-			if (typeof icon.tooltip === 'function') {
-				tooltip = icon.tooltip()
-			}
 			button.onmouseover = function() {
 				menu_tooltip.textContent = tooltip;
 			}
@@ -128,14 +199,14 @@
 			menu.appendChild(button);
 		}
 
-		function t(label) {
+		function t(tooltip) {
 			let tboxes = current_container.getElementsByClassName("tbox");
 			if (tboxes.length > 0) {
-				tboxes[0].innerHTML = TOOLTIP[label];
+				tboxes[0].innerHTML = tooltip;
 			} else {
 				let tbox = document.createElement("div");
 				tbox.className = "tbox";
-				tbox.innerHTML = TOOLTIP[label];
+				tbox.innerHTML = tooltip;
 				if (current_container==game) {
 					dialogue.appendChild(tbox);
 				} else {

@@ -1,7 +1,11 @@
 var ICON = {
 	inventory: {
 		name: "🎒",
-		tooltip: function() { return parseList("inventory", kids[kids.current].inventory) }
+		tooltip: "check inventory",
+		function: function() {
+			output = parseList("inventory", kids[kids.current].inventory);
+			t(output)
+		}
 	},
 	listen: {
 		name: "👂",
@@ -48,19 +52,33 @@ function parseList(t, list) {
 	let inv = {};
 	for (let i=0; i<list.length; i++) {
 		if (!(list[i].name in inv)) {
-			inv[list[i].name] = 1;
+			inv[list[i].name] = [1, list[i]];
 		} else {
-			inv[list[i].name]++
+			inv[list[i].name][0]++
 		}
 	}
 	let output = t+": ";
 	let keys = Object.keys(inv);
 	for (let i=0; i<keys.length; i++) {
 		let k = keys[i];
-		if (inv[keys[i]] > 1) {
+		if (inv[keys[i]][0] > 1) {
 			k = keys[i]+"s"
 		}
-		output += inWords(inv[keys[i]])+k;
+
+		output += inWords(inv[keys[i]][0])
+		if (kids.current in inv[keys[i]][1]) {
+			let string = inv[keys[i]][1][kids.current];
+			if (string.includes(">")) {
+				let i = broken_tooltips.length;
+				broken_tooltips.push(inv[keys[i]][1][kids.current]);
+				output += '<a onclick="t(broken_tooltips['+i+'])">'+k+'</a>';
+			} else {
+				output += '<a onclick="t(\`'+inv[keys[i]][1][kids.current]+'\`)">'+k+'</a>';
+			}
+		} else {
+			output += k;
+		}
+
 		if (i<keys.length-1) {
 			output += ", ";
 			if (i==keys.length-2) {

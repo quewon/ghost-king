@@ -12,6 +12,7 @@
   --margin-size: 20px;
 
   --highlight: var(--secondary);
+  --highlight-dark: var(--secondary);
 }
 
 @media only screen and (max-device-width: 480px) {
@@ -52,9 +53,9 @@ body {
 #game a {
   text-decoration: underline var(--background) 4px;
 }
-
 #game a:hover, a:focus {
-  background-color: var(--background);
+  text-decoration: underline var(--highlight-dark) 4px;
+  background: transparent;
 }
 
 #scene_name {
@@ -130,7 +131,15 @@ span {
   display: inline;
 }
 
-mark {
+#dialogue mark {
+  background-color: var(--background);
+  cursor: pointer;
+}
+#dialogue mark:hover {
+  background-color: var(--highlight-dark);
+}
+
+#character_info mark {
   display: inline-block;
   width: 100%;
   background-color: var(--highlight);
@@ -195,7 +204,7 @@ button {
 
 button:focus {
   outline: var(--primary);
-  border: 1px solid var(--highlight);
+  border: 1px solid var(--highlight-dark);
 }
     
 button::before, button::after {
