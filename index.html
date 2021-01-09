@@ -89,7 +89,7 @@
 			let scene = kids[kids.current].scene;
 			scene_name.innerHTML = scene.sceneobject.name;
 
-			let scenecontent = scene.sceneobject.line;
+			let scenecontent = setObject(scene.sceneobject);
 			for (let i=0; i<scene.objects.length; i++) {
 				let line = setObject(scene.objects[i]);
 				scenecontent += line + " ";

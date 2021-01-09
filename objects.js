@@ -19,6 +19,6 @@ var OBJECT = {
 	sceneTESTROOM: {
 		type: "sceneobject",
 		name: "test room",
-		line: "it's a test room."
+		line: "it's a [test room]."
 	},
 };
