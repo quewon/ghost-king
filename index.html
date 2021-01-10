@@ -148,7 +148,7 @@
 			}
 
 			if (!scene.visited) {
-				typeDialogue(scenecontent + "<br /><br />" + sceneexits);
+				type(dialogue, scenecontent + "<br /><br />" + sceneexits);
 				scene.visited = true;
 			} else {
 				dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
@@ -208,8 +208,8 @@
 			}
 		}
 
-		function typeDialogue(content) {
-			dialogue.innerHTML = "";
+		function type(element, content) {
+			element.innerHTML = "";
 
 			let div = document.createElement("div");
 			let stripped = content.replace("<br />", "¶");
@@ -231,18 +231,20 @@
 				if (counter==speed) {
 					counter = 0;
 					let char = stripped.charAt(charcount);
-					if (char.match(/[.,:!?]/)) {
+					if (char.match(/[.:!?]/)) {
 						pause = 20;
+					} else if (char.match(",")) {
+						pause = 10;
 					}
 					if (char=="¶") {
 						char = "<br /><br />";
 						pause = 15;
 					}
-					dialogue.innerHTML += char;
+					element.innerHTML += char;
 					charcount++;
 				}
 				if (charcount>stripped.length) {
-					dialogue.innerHTML = content;
+					element.innerHTML = content;
 				} else {
 					counter++;
 					requestAnimationFrame(animate);
@@ -258,7 +260,7 @@
 				t("inventory: empty");
 				return
 			}
-			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>");
+			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>", true);
 		}
 
 		function dropItem(index) {
@@ -270,7 +272,7 @@
 				t("inventory: empty");
 				return
 			}
-			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>");
+			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>", true);
 		}
 
 		function printMenuIcon(icon) {
@@ -289,20 +291,22 @@
 			menu.appendChild(button);
 		}
 
-		function t(tooltip) {
+		function t(tooltip, dontType) {
 			let tboxes = current_container.getElementsByClassName("tbox");
 			if (tboxes.length > 0) {
-				tboxes[0].innerHTML = tooltip;
+				if (dontType) { tboxes[0].innerHTML = tooltip }
+				else { type(tboxes[0], tooltip) }
 			} else {
 				let tbox = document.createElement("div");
 				tbox.className = "tbox";
-				tbox.innerHTML = tooltip;
 				if (current_container==game) {
 					dialogue.appendChild(tbox);
 				} else {
 					current_container.appendChild(tbox);
 				}
 				tbox.onclick = function(e){ this.remove() };
+				if (dontType) { tbox.innerHTML = tooltip }
+				else { type(tbox, tooltip) }
 			}
 
 			event.cancelBubble = true;

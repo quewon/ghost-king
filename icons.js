@@ -4,11 +4,11 @@ var ICON = {
 		tooltip: "check inventory",
 		function: function() {
 			if (kids[kids.current].inventory.length==0) {
-				t("inventory: empty");
+				t("inventory: empty", true);
 				return
 			}
 			output = parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>";
-			t(output)
+			t(output, true)
 		}
 	},
 	listen: {
