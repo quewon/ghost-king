@@ -1,12 +1,12 @@
 var OBJECT = {
 	kGLOWSTICK: {
 		name: "industrial glow stick",
-		line: "there's a [glowing object] on the ground.",
+		line: "a [glow stick] on the ground.",
 		kitty: `you're never fully geared up without these. someone once asked you why you've always got one with you: is it a fear of darkness or do you just like the glow? you've never thought about it.`
 	},
 	kBOMB: {
 		name: "glitter bomb",
-		line: "there's a [bunch of glitter]."
+		line: "a bunch of [glitter] strewn about, to someone's dismay."
 	},
 	kSPYPEN: {
 		name: "invisible ink marker + blue light flashlight",
@@ -15,7 +15,7 @@ var OBJECT = {
 	},
 	kWATCH: {
 		name: "mickey mouse light-up watch",
-		line: "there's a [cute watch]."
+		line: "someone's left a [cute watch] here."
 	},
 
 	pHAMMER: {
@@ -26,7 +26,7 @@ var OBJECT = {
 
 	bHANDBOOK: {
 		name: "necromancer's handbook",
-		line: "there's a [hefty, ornate college ruled notebook] on the ground. it's worn.",
+		line: "an old, worn [college ruled notebook] is sitting here.",
 		bird: `you must have begged <a onclick="t(DIALOGUE.fisher)">fisher</a> for years. it was only after you asked Sa herself if She had a copy that fisher finally let you copy her files. that's right, this is a bona-fide necromancy ritualbook.`
 	},
 	bQUILL: {
@@ -54,7 +54,7 @@ var OBJECT = {
 	},
 
 	eTUNNEL: {
-		line: "there's a [tunnel] leading out somewhere.",
+		line: "there's a [tunnel] that leads nowhere.",
 		destination: "testtunnel"
 	}
 };
