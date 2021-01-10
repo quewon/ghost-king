@@ -41,18 +41,18 @@
 				inventory: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH],
 				bgcolor: "#fff49d",
 				strongcolor: "#ffe24f",
-				scene: SCENE.oasis
+				scene: SCENE.oasis,
 			},
 			pup: {
 				menu: [ICON.inventory, ICON.fight],
-				inventory: [OBJECT.pHAMMER, OBJECT.kGLOWSTICK, OBJECT.iICECREAMSANDWICH],
+				inventory: [OBJECT.pHAMMER, OBJECT.kGLOWSTICK, OBJECT.ICECREAMSANDWICH],
 				bgcolor: "#9dceff",
 				strongcolor: "#4fcdff",
 				scene: SCENE.oasis
 			},
 			bird: {
 				menu: [ICON.inventory, ICON.handbook],
-				inventory: [OBJECT.bHANDBOOK, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.bQUILL, OBJECT.bPEN, OBJECT.bPEN],
+				inventory: [OBJECT.bHANDBOOK, OBJECT.ICECREAMSANDWICH, OBJECT.ICECREAMSANDWICH, OBJECT.ICECREAMSANDWICH, OBJECT.ICECREAMSANDWICH, OBJECT.bQUILL, OBJECT.bPEN, OBJECT.bPEN],
 				bgcolor: "#ff9db7",
 				strongcolor: "#ff4f90",
 				scene: SCENE.oasis
@@ -137,27 +137,38 @@
 			scene_name.innerHTML = scene.sceneobject.name;
 
 			let scenecontent = setObject(scene.sceneobject, "scene")+" ";
-			for (let i=0; i<scene.objects.length; i++) {
-				let line = setObject(scene.objects[i], "item", i);
-				scenecontent += line + " ";
+			if ('objects' in scene) {
+				for (let i=0; i<scene.objects.length; i++) {
+					let line = setObject(scene.objects[i], "item", i);
+					scenecontent += line + " ";
+				}
 			}
 
 			let sceneexits = "";
-			for (let i=0; i<scene.exits.length; i++) {
-				sceneexits += setObject(scene.exits[i], "exit") + " ";
+			if ('exits' in scene) {
+				for (let i=0; i<scene.exits.length; i++) {
+					sceneexits += setObject(scene.exits[i], "exit") + " ";
+				}
 			}
 
+			let content = scenecontent + "<br /><br />" + sceneexits;
+			if (scenecontent.trim()=="") { content = sceneexits }
+			else if (sceneexits.trim()=="") { content = scenecontent }
+
 			if (!scene.visited) {
-				type(dialogue, scenecontent + "<br /><br />" + sceneexits);
+				type(dialogue, content);
 				scene.visited = true;
 			} else {
-				dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
+				dialogue.innerHTML = content;
 			}
 
 			if (savedt) { dialogue.appendChild(savedt) }
 
 			function setObject(obj, type, index) {
 				let l = obj.line;
+				if (!('line' in obj)) {
+					return ""
+				}
 
 				switch(type) {
 					case "scene":
@@ -171,8 +182,7 @@
 								let index = obj[kids.current][0];
 								string = obj[kids.current][index];
 								if (index < obj[kids.current].length-1) {
-									obj[kids.current][0]++;
-									extra = ";setScene(true)";
+									extra = ";kids[kids.current].scene.sceneobject[kids.current][0]++;setScene(true)";
 								}
 								if (string=="") {
 									l = l.replace(`OPENBRACKETCHAR`, ``);
@@ -186,7 +196,7 @@
 								l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
 								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(broken_tooltips[`+i+`])`+extra+`">`);
 							} else {
-								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t('`+string+`')`+extra+`">`);
+								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(\``+string+`\`)`+extra+`">`);
 								l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
 							}
 						} else {

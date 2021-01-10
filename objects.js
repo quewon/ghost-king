@@ -37,33 +37,9 @@ var OBJECT = {
 		name: "erasable ballpoint pen",
 		line: "a [pen]."
 	},
-
-	iICECREAMSANDWICH: {
+	ICECREAMSANDWICH: {
 		name: "ice cream sandwich",
 		line: "there's a melting [ice cream sandwich] on the ground.",
 		bird: `the goddess of death likes gelato. yeah, you didn't know what to make of that, either.`
 	},
-
-	sOASIS: {
-		name: "an oasis",
-		line: "around you is a small oasis. it's a lonely pond and a small [bridge].",
-		kitty: [1, `<a onclick="t(DIALOGUE.fisher)">fisher</a>'s gone and you've got nowhere to go. you spend your days wandering aimlessly, following the slightest whispers.<br /><br />the ghosts, they led you here. now there's nothing. only you, this heat, and the water running under your feet.`, ""]
-	},
-	sDESERT: {
-		name: "sand",
-		line: "your footsteps are swept away by the light breeze. days pass just walking."
-	},
-
-	eDESERT: {
-		line: "the vast [desert] invites you to wander deeper in.",
-		destination: "desert"
-	},
-	eOASIS: {
-		line: "an [oasis] glitters in the distance.",
-		destination: "oasis"
-	},
-	eWALL: {
-		line: "at the end of your vision, a [stone wall] like a shadow.",
-		destination: "outer_wall"
-	}
 };
