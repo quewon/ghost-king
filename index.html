@@ -105,7 +105,6 @@
 			}
 			setScene();
 			document.querySelector("title").textContent = kids.current;
-			animate();
 		}
 
 		var current_container = document.getElementById("chars");
@@ -145,14 +144,17 @@
 
 			let sceneexits = "";
 			for (let i=0; i<scene.exits.length; i++) {
-				sceneexits += setObject(scene.exits[i], "exit");
+				sceneexits += setObject(scene.exits[i], "exit") + " ";
 			}
 
-			dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
+			if (!scene.visited) {
+				typeDialogue(scenecontent + "<br /><br />" + sceneexits);
+				scene.visited = true;
+			} else {
+				dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
+			}
 
 			if (savedt) { dialogue.appendChild(savedt) }
-
-			if (!scene.visited) { scene.visited = true }
 
 			function setObject(obj, type, index) {
 				let l = obj.line;
@@ -203,6 +205,48 @@
 				}
 
 				return l
+			}
+		}
+
+		function typeDialogue(content) {
+			dialogue.innerHTML = "";
+
+			let div = document.createElement("div");
+			let stripped = content.replace("<br />", "¶");
+			div.innerHTML = stripped;
+			stripped = div.textContent || "";
+			div.remove();
+
+			var speed = 3;
+			var counter = 0;
+			var charcount = 0;
+			var pause = 0;
+			animate();
+			function animate() {
+				if (pause > 0) {
+					pause--;
+					requestAnimationFrame(animate);
+					return;
+				}
+				if (counter==speed) {
+					counter = 0;
+					let char = stripped.charAt(charcount);
+					if (char.match(/[.,:!?]/)) {
+						pause = 20;
+					}
+					if (char=="¶") {
+						char = "<br /><br />";
+						pause = 15;
+					}
+					dialogue.innerHTML += char;
+					charcount++;
+				}
+				if (charcount>stripped.length) {
+					dialogue.innerHTML = content;
+				} else {
+					counter++;
+					requestAnimationFrame(animate);
+				}
 			}
 		}
 
@@ -268,13 +312,6 @@
 			if (current_container.getElementsByClassName("tbox").length > 0) {
 				current_container.removeChild(document.querySelector(".tbox"))
 			}
-		}
-
-		var counter = 0;
-		function animate() {
-			requestAnimationFrame(animate);
-
-			counter++;
 		}
 	</script>
 	<script src="whispers.js"></script>

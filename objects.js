@@ -45,9 +45,9 @@ var OBJECT = {
 	},
 
 	sOASIS: {
-		name: "the oasis",
-		line: "around you is a small oasis: a single pond and its [bridge].",
-		kitty: [1, `now that <a onclick="t(DIALOGUE.fisher)">fisher</a>'s gone and you've got nowhere to go, you've been spending days wandering aimlessly, following the slightest whispers.<br /><br />the ghosts, they led you here. now there's nothing. only you, this heat, and the water running under your feet.`, ""]
+		name: "an oasis",
+		line: "around you is a small oasis. it's a lonely pond and a small [bridge].",
+		kitty: [1, `<a onclick="t(DIALOGUE.fisher)">fisher</a>'s gone and you've got nowhere to go. you spend your days wandering aimlessly, following the slightest whispers.<br /><br />the ghosts, they led you here. now there's nothing. only you, this heat, and the water running under your feet.`, ""]
 	},
 	sDESERT: {
 		name: "sand",
