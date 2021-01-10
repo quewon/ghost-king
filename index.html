@@ -222,7 +222,7 @@
 			element.innerHTML = "";
 
 			let div = document.createElement("div");
-			let stripped = content.replace("<br />", "¶");
+			let stripped = content.replace(/<br \/>/g, "¶");
 			div.innerHTML = stripped;
 			stripped = div.textContent || "";
 			div.remove();
@@ -232,6 +232,7 @@
 			var charcount = 0;
 			var pause = 0;
 			animate();
+
 			function animate() {
 				if (pause > 0) {
 					pause--;
@@ -247,7 +248,7 @@
 						pause = 10;
 					}
 					if (char=="¶") {
-						char = "<br /><br />";
+						char = "<br />";
 						pause = 15;
 					}
 					element.innerHTML += char;
