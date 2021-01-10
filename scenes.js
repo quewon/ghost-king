@@ -1,17 +1,17 @@
 var SCENE = {
-	testroom: {
-		sceneobject: OBJECT.sTESTROOM,
-		objects: [OBJECT.kBOMB],
+	oasis: {
+		sceneobject: OBJECT.sOASIS,
+		objects: [],
 		ghosts: [],
-		exits: [OBJECT.eTUNNEL],
+		exits: [OBJECT.eDESERT],
 		visited: false,
 		img: null
 	},
-	testtunnel: {
-		sceneobject: OBJECT.sTESTTUNNEL,
+	desert: {
+		sceneobject: OBJECT.sDESERT,
 		objects: [],
 		ghosts: [],
-		exits: [],
+		exits: [OBJECT.eOASIS, OBJECT.eWALL],
 		visited: false,
 		img: null
 	}

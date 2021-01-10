@@ -41,23 +41,23 @@
 				inventory: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH],
 				bgcolor: "#fff49d",
 				strongcolor: "#ffe24f",
-				scene: SCENE.testroom
+				scene: SCENE.oasis
 			},
 			pup: {
 				menu: [ICON.inventory, ICON.fight],
 				inventory: [OBJECT.pHAMMER, OBJECT.kGLOWSTICK, OBJECT.iICECREAMSANDWICH],
 				bgcolor: "#9dceff",
 				strongcolor: "#4fcdff",
-				scene: SCENE.testroom
+				scene: SCENE.oasis
 			},
 			bird: {
 				menu: [ICON.inventory, ICON.handbook],
 				inventory: [OBJECT.bHANDBOOK, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.iICECREAMSANDWICH, OBJECT.bQUILL, OBJECT.bPEN, OBJECT.bPEN],
 				bgcolor: "#ff9db7",
 				strongcolor: "#ff4f90",
-				scene: SCENE.testroom
+				scene: SCENE.oasis
 			}
-		}
+		};
 		kids.kitty.info = `<mark>kitty</mark>
 					<br /><br />
 					the ghost whisperer<br /><br />
@@ -124,9 +124,15 @@
 
 		var dialogue = document.getElementById("dialogue");
 		var scene_name = document.getElementById("scene_name");
-		function setScene() {
+		function setScene(keepTbox) {
 			//this is so broken_tooltips doesnt become a billion elements long
 			broken_tooltips = [];
+
+			keepTbox = keepTbox || false;
+			let savedt = null;
+			if (keepTbox && game.getElementsByClassName("tbox").length > 0) {
+				savedt = document.querySelector(".tbox");
+			}
 
 			let scene = kids[kids.current].scene;
 			scene_name.innerHTML = scene.sceneobject.name;
@@ -144,6 +150,8 @@
 
 			dialogue.innerHTML = scenecontent + "<br /><br />" + sceneexits;
 
+			if (savedt) { dialogue.appendChild(savedt) }
+
 			if (!scene.visited) { scene.visited = true }
 
 			function setObject(obj, type, index) {
@@ -152,8 +160,33 @@
 				switch(type) {
 					case "scene":
 						if (kids.current in obj) {
-							l = l.replace(`[`, `<a onclick="t('`+obj[kids.current]+`')">`);
-							l = l.replace(`]`, `</a>`);
+							l = l.replace("]", "CLOSEDBRACKETCHAR");
+							l = l.replace("[", "OPENBRACKETCHAR");
+
+							let string = obj[kids.current];
+							let extra = "";
+							if (Array.isArray(obj[kids.current])) {
+								let index = obj[kids.current][0];
+								string = obj[kids.current][index];
+								if (index < obj[kids.current].length-1) {
+									obj[kids.current][0]++;
+									extra = ";setScene(true)";
+								}
+								if (string=="") {
+									l = l.replace(`OPENBRACKETCHAR`, ``);
+									l = l.replace(`CLOSEDBRACKETCHAR`, ``);
+									break;
+								}
+							}
+							if (string.includes("<")) {
+								let i = broken_tooltips.length;
+								broken_tooltips.push(string);
+								l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
+								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(broken_tooltips[`+i+`])`+extra+`">`);
+							} else {
+								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t('`+string+`')`+extra+`">`);
+								l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
+							}
 						} else {
 							l = l.replace(`[`, ``);
 							l = l.replace(`]`, ``);
@@ -227,6 +260,7 @@
 				}
 				tbox.onclick = function(e){ this.remove() };
 			}
+
 			event.cancelBubble = true;
 		}
 

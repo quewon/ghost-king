@@ -44,17 +44,26 @@ var OBJECT = {
 		bird: `the goddess of death likes gelato. yeah, you didn't know what to make of that, either.`
 	},
 
-	sTESTROOM: {
-		name: "test room",
-		line: "it's a [test room]."
+	sOASIS: {
+		name: "the oasis",
+		line: "around you is a small oasis: a single pond and its [bridge].",
+		kitty: [1, `now that <a onclick="t(DIALOGUE.fisher)">fisher</a>'s gone and you've got nowhere to go, you've been spending days wandering aimlessly, following the slightest whispers.<br /><br />the ghosts, they led you here. now there's nothing. only you, this heat, and the water running under your feet.`, ""]
 	},
-	sTESTTUNNEL: {
-		name: "test tunnel",
-		line: "there's no way back."
+	sDESERT: {
+		name: "sand",
+		line: "your footsteps are swept away by the light breeze. days pass just walking."
 	},
 
-	eTUNNEL: {
-		line: "there's a [tunnel] that leads nowhere.",
-		destination: "testtunnel"
+	eDESERT: {
+		line: "the vast [desert] invites you to wander deeper in.",
+		destination: "desert"
+	},
+	eOASIS: {
+		line: "an [oasis] glitters in the distance.",
+		destination: "oasis"
+	},
+	eWALL: {
+		line: "at the end of your vision, a [stone wall] like a shadow.",
+		destination: "outer_wall"
 	}
 };
