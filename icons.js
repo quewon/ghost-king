@@ -77,9 +77,9 @@ function parseList(t, list) {
 			if (string.includes(">")) {
 				let i = broken_tooltips.length;
 				broken_tooltips.push(inv[keys[i]][1][kids.current]);
-				output += '<a onclick="t(broken_tooltips['+i+'])">'+k+'</a>';
+				output += '<a onclick="t(broken_tooltips['+i+'],kids[kids.current].speed)">'+k+'</a>';
 			} else {
-				output += '<a onclick="t(\`'+inv[keys[i]][1][kids.current]+'\`)">'+k+'</a>';
+				output += '<a onclick="t(\`'+inv[keys[i]][1][kids.current]+'\`,kids[kids.current].speed)">'+k+'</a>';
 			}
 		} else {
 			output += k;

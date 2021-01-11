@@ -39,23 +39,26 @@
 			kitty: {
 				menu: [ICON.inventory, ICON.listen],
 				inventory: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH],
-				bgcolor: "#fff49d",
-				strongcolor: "#ffe24f",
+				bgcolor: "#fff27d",
+				strongcolor: "#fff947",
 				scene: SCENE.oasis,
+				speed: 3
 			},
 			pup: {
 				menu: [ICON.inventory, ICON.fight],
 				inventory: [OBJECT.pHAMMER, OBJECT.kGLOWSTICK, OBJECT.ICECREAMSANDWICH],
-				bgcolor: "#9dceff",
-				strongcolor: "#4fcdff",
-				scene: SCENE.oasis
+				bgcolor: "#a6d5ff",
+				strongcolor: "#5c87ff",
+				scene: SCENE.oasis,
+				speed: 4
 			},
 			bird: {
 				menu: [ICON.inventory, ICON.handbook],
 				inventory: [OBJECT.bHANDBOOK, OBJECT.ICECREAMSANDWICH, OBJECT.ICECREAMSANDWICH, OBJECT.ICECREAMSANDWICH, OBJECT.ICECREAMSANDWICH, OBJECT.bQUILL, OBJECT.bPEN, OBJECT.bPEN],
-				bgcolor: "#ff9db7",
-				strongcolor: "#ff4f90",
-				scene: SCENE.oasis
+				bgcolor: "#ffa6be",
+				strongcolor: "#ff5c72",
+				scene: SCENE.oasis,
+				speed: 2
 			}
 		};
 		kids.kitty.info = `<mark>kitty</mark>
@@ -71,6 +74,10 @@
 					self-proclaimed ghost scholar<br /><br />
 					age: 12<br /><br />`;
 
+		var settings = {
+			typing_speed: 3
+		};
+
 		var char_info = document.getElementById("character_info");
 		var game = document.getElementById("game");
 		var menu = document.getElementById("menu");
@@ -82,6 +89,8 @@
 		};
 
 		function selectKid(name) {
+			broken_tooltips = [];
+
 			kids.current = name;
 			char_info.style.display = "inline-block";
 			char_info.className = "info_enter";
@@ -218,7 +227,9 @@
 			}
 		}
 
-		function type(element, content) {
+		function type(element, content, s) {
+			s = s || settings.typing_speed;
+
 			element.innerHTML = "";
 
 			let div = document.createElement("div");
@@ -227,7 +238,7 @@
 			stripped = div.textContent || "";
 			div.remove();
 
-			var speed = 3;
+			var speed = s;
 			var counter = 0;
 			var charcount = 0;
 			var pause = 0;
@@ -243,13 +254,13 @@
 					counter = 0;
 					let char = stripped.charAt(charcount);
 					if (char.match(/[.:!?]/)) {
-						pause = 20;
+						pause = 12+s;
 					} else if (char.match(",")) {
-						pause = 10;
+						pause = 5+s;
 					}
 					if (char=="¶") {
 						char = "<br />";
-						pause = 15;
+						pause = 2+s;
 					}
 					element.innerHTML += char;
 					charcount++;
@@ -302,22 +313,23 @@
 			menu.appendChild(button);
 		}
 
-		function t(tooltip, dontType) {
+		function t(tooltip, speed) {
 			let tboxes = current_container.getElementsByClassName("tbox");
 			if (tboxes.length > 0) {
-				if (dontType) { tboxes[0].innerHTML = tooltip }
-				else { type(tboxes[0], tooltip) }
+				tboxes[0].remove();
+			}
+			let tbox = document.createElement("div");
+			tbox.className = "tbox";
+			if (current_container==game) {
+				dialogue.appendChild(tbox);
 			} else {
-				let tbox = document.createElement("div");
-				tbox.className = "tbox";
-				if (current_container==game) {
-					dialogue.appendChild(tbox);
-				} else {
-					current_container.appendChild(tbox);
-				}
-				tbox.onclick = function(e){ this.remove() };
-				if (dontType) { tbox.innerHTML = tooltip }
-				else { type(tbox, tooltip) }
+				current_container.appendChild(tbox);
+			}
+			tbox.onclick = function(e){ this.remove() };
+			if (speed==true) { tbox.innerHTML = tooltip }
+			else {
+				speed = speed || settings.typing_speed;
+				type(tbox, tooltip, speed)
 			}
 
 			event.cancelBubble = true;
