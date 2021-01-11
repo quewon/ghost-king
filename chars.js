@@ -1,23 +1,20 @@
 var CHAR = {
 	WALL_GOLEM: {
 		name: "wall golem",
-		scene: "stone_wall",
+		scene: "wall_golem",
 		line: "this wall is a [golem].",
 		state: {
-			current_state: 'neutral',
 			neutral: {
 				line: "it only stops grumbling when you notice it.",
-				kitty: "HEY KITTY. HOW'S IT GOING?"
+				kitty: [1, "HEY, KITTY. REMEMBER ME? ... AH, I DON'T BLAME YA. THIS SWEET NEW BODY OF MINE DOESN'T REALLY, WELL, GET AROUND. ... KNOW WHAT I MEAN?", "I GOTTA SAY, KITTY, IT'S SO MUCH BETTER THAN BEING INVISIBLE ALL THE TIME. I THINK.", "I CAN TALK AT SO MANY PEOPLE NOW! EVEN PEOPLE THAT DON'T HAPPEN TO HAVE THE INNATE ABILITY TO HEAR GHOSTS! ALTHOUGH, YOU'RE THE ONLY ONE THAT'S STAYED AND LISTENED FOR SO LONG..."]
 			}
-		},
-		kitty: [1, `should you be surprised you didn't realize sooner? you hear ghosts, not golems, even if they are just ghosts in clay costumes. plus, you've... never seen a golem so big. it's scary big.`, ""]
+		}
 	},
 	KITTY: {
 		name: "kitty",
 		scene: "oasis",
 		line: "it's [kitty].",
 		state: {
-			current_state: 'neutral',
 			neutral: {
 				line: "there's something different about her.",
 				bird: "hey, bird.",
@@ -31,7 +28,6 @@ var CHAR = {
 		scene: "testroom",
 		line: "it's [pup].",
 		state: {
-			current_state: 'neutral',
 			neutral: {
 				line: "he looks surprised to see you.",
 				kitty: "kitty.",
@@ -45,7 +41,6 @@ var CHAR = {
 		scene: "testroom",
 		line: "it's [bird].",
 		state: {
-			current_state: 'neutral',
 			neutral: {
 				line: "he's not doing so hot, is he?",
 				kitty: "kitty? what are you doing here?",

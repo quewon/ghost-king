@@ -43,7 +43,8 @@
 				bgcolor: "#fff27d",
 				strongcolor: "#fff947",
 				scene: SCENE.oasis,
-				speed: 3
+				speed: 3,
+				state: "neutral"
 			},
 			pup: {
 				menu: [ICON.inventory, ICON.fight],
@@ -51,7 +52,8 @@
 				bgcolor: "#a6d5ff",
 				strongcolor: "#5c87ff",
 				scene: SCENE.oasis,
-				speed: 4
+				speed: 4,
+				state: "neutral"
 			},
 			bird: {
 				menu: [ICON.inventory, ICON.handbook],
@@ -59,7 +61,8 @@
 				bgcolor: "#ffa6be",
 				strongcolor: "#ff5c72",
 				scene: SCENE.oasis,
-				speed: 2
+				speed: 2,
+				state: "neutral"
 			}
 		};
 		kids.kitty.info = `<mark>kitty</mark>
@@ -68,7 +71,7 @@
 					age: 11<br /><br />`;
 		kids.pup.info = `<mark>pup</mark>
 					<br /><br />
-					<a onclick="t(DIALOGUE.exghosthunter)">ex ghost hunter</a><br /><br />
+					<a onclick="t(DIALOGUE.exghosthunter,kids[kids.current].speed)">ex ghost hunter</a><br /><br />
 					age: 13<br /><br />`;
 		kids.bird.info = `<mark>bird</mark>
 					<br /><br />
@@ -84,69 +87,6 @@
 		var menu = document.getElementById("menu");
 		var menu_tooltip = document.getElementById("menu_tooltip");
 		var root = document.documentElement;
-
-		window.oncontextmenu = function() {
-			return false
-		};
-
-		function selectKid(name) {
-			broken_tooltips = [];
-
-			kids.current = name;
-			char_info.style.display = "inline-block";
-			char_info.className = "info_enter";
-			char_info.innerHTML = kids[name].info+parseList("inventory", kids[kids.current].inventory);
-
-			document.getElementById("play_button").style.display = "flex";
-			document.getElementById("play_button").className = "button_secondary flicker-in";
-			root.style.setProperty("--highlight", kids[name].bgcolor);
-			root.style.setProperty("--highlight-dark", kids[name].strongcolor);
-
-			cleart();
-
-			document.getElementById("name").textContent = name;
-		}
-
-		function play() {
-			transition(kids[kids.current].bgcolor, game);
-			let menu = kids[kids.current].menu;
-			for (let i=0; i<menu.length; i++) {
-				printMenuIcon(kids[kids.current].menu[i])
-			}
-			placesEverybody();
-			setScene();
-			document.querySelector("title").textContent = kids.current;
-		}
-
-		var current_container = document.getElementById("chars");
-		function transition(color, container) {
-			let curtain = document.getElementById("curtain");
-			curtain.style.background = color;
-			curtain.className = "curtain_wipe";
-			setTimeout(function() {
-				current_container.style.display = "none";
-				document.body.style.background = color;
-				curtain.className = "";
-				container.style.display = "block";
-				current_container = container;
-			}, 2000);
-		}
-
-		function placesEverybody() {
-			let keys = Object.keys(CHAR);
-			for (let i=0; i<keys.length; i++) {
-				if ('exclusive' in CHAR[keys[i]]) {
-					if (!(CHAR[keys[i]].exclusive.includes(kids.current))) {
-						continue;
-					}
-				}
-				if (Array.isArray(SCENE[CHAR[keys[i]].scene].chars)) {
-					SCENE[CHAR[keys[i]].scene].chars.push(keys[i])
-				} else {
-					SCENE[CHAR[keys[i]].scene].chars = [keys[i]];
-				}
-			}
-		}
 
 		var dialogue = document.getElementById("dialogue");
 		var scene_name = document.getElementById("scene_name");
@@ -174,7 +114,7 @@
 			let scenechars = "";
 			if ('chars' in scene) {
 				for (let i=0; i<scene.chars.length; i++) {
-					scenechars += setObject(CHAR[scene.chars[i]], "char") + " "
+					scenechars += setObject(CHAR[scene.chars[i]], "char", i) + " "
 				}
 			}
 
@@ -247,14 +187,31 @@
 						}
 						break;
 					case "char":
-						let c = obj.state[obj.state.current_state];
-						let dialog = c.line;
-						if (kids.current in c) {
-							dialog += "<br /><b>"+obj.name+": </b>"+c[kids.current]
+						let c = "";
+						let s = "";
+						if (kids[kids.current].state in obj.state) {
+							c = obj.state[kids[kids.current].state];
+							s = kids[kids.current].state;
+						} else {
+							c = obj.state.neutral;
+							s = "neutral";
 						}
+						if (kids.current in c) {
+							let dialog = c.line;
 
-						l = l.replace(`[`, `<a onclick="t(\``+dialog+`\`)">`);
-						l = l.replace(`]`, `</a>`);
+							dialog += "<br /><b>"+obj.name+": </b>"+c[kids.current][c[kids.current][0]];
+
+							let extra = "";
+							if (c[kids.current][0] < c[kids.current].length-1) {
+								extra = ";CHAR[kids[kids.current].scene.chars["+index+"]].state."+s+"[kids.current][0]++;setScene(true)";
+							}
+							l = l.replace("]", "CLOSEDBRACKETCHAR");
+							l = l.replace("[", "OPENBRACKETCHAR");
+							l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(\``+dialog+`\`,)`+extra+`">`);
+							l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
+						} else {
+							return ""
+						}
 						break;
 					case "item":
 						l = l.replace(`[`, `<a onclick="pickUp(`+index+`)">`);
@@ -280,8 +237,6 @@
 			div.innerHTML = stripped;
 			stripped = div.textContent || "";
 			div.remove();
-
-			console.log(content);
 
 			stripped = stripped.split("");
 
@@ -317,6 +272,69 @@
 				} else {
 					counter++;
 					requestAnimationFrame(animate);
+				}
+			}
+		}
+
+		window.oncontextmenu = function() {
+			return false
+		};
+
+		function selectKid(name) {
+			broken_tooltips = [];
+
+			kids.current = name;
+			char_info.style.display = "inline-block";
+			char_info.className = "info_enter";
+			char_info.innerHTML = kids[name].info+parseList("inventory", kids[kids.current].inventory);
+
+			document.getElementById("play_button").style.display = "flex";
+			document.getElementById("play_button").className = "button_secondary flicker-in";
+			root.style.setProperty("--highlight", kids[name].bgcolor);
+			root.style.setProperty("--highlight-dark", kids[name].strongcolor);
+
+			cleart();
+
+			document.getElementById("name").textContent = name;
+		}
+
+		function play() {
+			transition(kids[kids.current].bgcolor, game);
+			let menu = kids[kids.current].menu;
+			for (let i=0; i<menu.length; i++) {
+				printMenuIcon(kids[kids.current].menu[i])
+			}
+			placesEverybody();
+			setScene();
+			document.querySelector("title").textContent = kids.current;
+		}
+
+		var current_container = document.getElementById("chars");
+		function transition(color, container) {
+			let curtain = document.getElementById("curtain");
+			curtain.style.background = color;
+			curtain.className = "curtain_wipe";
+			setTimeout(function() {
+				current_container.style.display = "none";
+				document.body.style.background = color;
+				curtain.className = "";
+				container.style.display = "block";
+				current_container = container;
+			}, 2000);
+		}
+
+		function placesEverybody() {
+			let keys = Object.keys(CHAR);
+			for (let i=0; i<keys.length; i++) {
+				if ('exclusive' in CHAR[keys[i]]) {
+					if (!(CHAR[keys[i]].exclusive.includes(kids.current))) {
+						continue;
+					}
+				}
+				if (Array.isArray(SCENE[CHAR[keys[i]].scene].chars)) {
+					SCENE[CHAR[keys[i]].scene].chars.push(keys[i])
+				} else {
+					SCENE[CHAR[keys[i]].scene].chars = [keys[i]];
 				}
 			}
 		}

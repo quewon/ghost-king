@@ -1,5 +1,5 @@
 var DIALOGUE = {
-	exghosthunter: `frankly: you're still a hunter, in your mind. but meeting <a onclick="t(DIALOGUE.fisher)">fisher</a> made you less proud of that name.`,
+	exghosthunter: `frankly: you're still a hunter, in your mind. but meeting <a onclick="t(DIALOGUE.fisher,kids[kids.current].speed)">fisher</a> made you less proud of that name.`,
 	fisher: `... nobody likes to talk about what happened to fisher.`
 };
 
