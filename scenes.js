@@ -3,7 +3,7 @@ var SCENE = {
 		sceneobject: {
 			name: "an oasis",
 			line: "around you is a small oasis. it's a lonely pond and a small [bridge].",
-			kitty: [1, `<a onclick="t(DIALOGUE.fisher)">fisher</a>'s gone, the team's broken up, and you've got nowhere to go. you spend your days wandering aimlessly, following the slightest whispers.<br /><br />the ghosts, they led you here. now there's nothing. only you, this heat, and the water running under your feet.`, "it's kind of a cute bridge.", "ANYWAY, YOU GET A PASS."]
+			kitty: [1, `<a onclick="t(DIALOGUE.fisher)">fisher</a>'s gone, the team's broken up, and you've got nowhere to go. you spend your days wandering aimlessly, following the slightest whispers.<br /><br />the ghosts, they led you here. now there's nothing. only you, this heat, and the water running under your feet.`, "it's kind of a cute bridge."]
 		},
 		exits: [
 			{
