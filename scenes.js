@@ -37,25 +37,20 @@ var SCENE = {
 			name: "a stone wall",
 		},
 		objects: [OBJECT.ICECREAMSANDWICH],
-		ghosts: [],
 		exits: [
 			{
 				line: "on one side of this wall, the [desert].",
 				destination: "desert",
-			},
-			{
-				line: "on the other... [is this wall grumbling]?",
-				destination: "wall_golem"
 			}
 		],
 		visited: false,
 		img: null
 	},
-	wall_golem: {
+
+	testroom: {
 		sceneobject: {
-			name: "wall golem",
-			line: `this wall is a [golem].<br /><br />HEY, it says, WATCH WHERE YOU'RE GOING, LADY.<br /><br /><i>that's it for now...! more to come</i>`,
-			kitty: [1, `should you be surprised you didn't realize sooner? you hear ghosts, not golems, even if they are just ghosts in clay costumes. plus, you've... never seen a golem so big. it's scary big.`, ""]
+			name: "test room",
+			line: "hey... u shouldn't be here. quick, get back to the game before somebody notices."
 		},
 		visited: false,
 		img: null

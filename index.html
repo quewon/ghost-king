@@ -13,7 +13,7 @@
 			<h1>ghost club blues</h1>
 			<div id="character_selection">
 				<button onclick="selectKid('kitty')"><p>kitty<br />
-					<i>in progress</i></p></button>
+					<i>work in progress</i></p></button>
 				<button onclick="selectKid('pup')"><p>pup<br />
 					<i>coming soon!</i></p></button>
 				<button onclick="selectKid('bird')"><p>bird<br />
@@ -32,6 +32,7 @@
 	<script src="dialog.js"></script>
 	<script src="icons.js"></script>
 	<script src="objects.js"></script>
+	<script src="chars.js"></script>
 	<script src="scenes.js"></script>
 	<script>
 		var kids = {
@@ -112,6 +113,7 @@
 			for (let i=0; i<menu.length; i++) {
 				printMenuIcon(kids[kids.current].menu[i])
 			}
+			placesEverybody();
 			setScene();
 			document.querySelector("title").textContent = kids.current;
 		}
@@ -128,6 +130,22 @@
 				container.style.display = "block";
 				current_container = container;
 			}, 2000);
+		}
+
+		function placesEverybody() {
+			let keys = Object.keys(CHAR);
+			for (let i=0; i<keys.length; i++) {
+				if ('exclusive' in CHAR[keys[i]]) {
+					if (!(CHAR[keys[i]].exclusive.includes(kids.current))) {
+						continue;
+					}
+				}
+				if (Array.isArray(SCENE[CHAR[keys[i]].scene].chars)) {
+					SCENE[CHAR[keys[i]].scene].chars.push(keys[i])
+				} else {
+					SCENE[CHAR[keys[i]].scene].chars = [keys[i]];
+				}
+			}
 		}
 
 		var dialogue = document.getElementById("dialogue");
@@ -153,6 +171,13 @@
 				}
 			}
 
+			let scenechars = "";
+			if ('chars' in scene) {
+				for (let i=0; i<scene.chars.length; i++) {
+					scenechars += setObject(CHAR[scene.chars[i]], "char") + " "
+				}
+			}
+
 			let sceneexits = "";
 			if ('exits' in scene) {
 				for (let i=0; i<scene.exits.length; i++) {
@@ -160,9 +185,17 @@
 				}
 			}
 
-			let content = scenecontent + "<br /><br />" + sceneexits;
-			if (scenecontent.trim()=="") { content = sceneexits }
-			else if (sceneexits.trim()=="") { content = scenecontent }
+			let content = [];
+			if (scenecontent.trim()!="") { content.push(scenecontent) }
+			if (scenechars.trim()!="") { content.push(scenechars) }
+			if (sceneexits.trim()!="") { content.push(sceneexits) }
+
+			let newcontent = "";
+			for (let i=0; i<content.length-1; i++) {
+				newcontent += content[i] + "<br /><br />";
+			}
+			newcontent += content[content.length-1];
+			content = newcontent;
 
 			if (!scene.visited) {
 				type(dialogue, content);
@@ -213,6 +246,16 @@
 							l = l.replace(`]`, ``);
 						}
 						break;
+					case "char":
+						let c = obj.state[obj.state.current_state];
+						let dialog = c.line;
+						if (kids.current in c) {
+							dialog += "<br /><b>"+obj.name+": </b>"+c[kids.current]
+						}
+
+						l = l.replace(`[`, `<a onclick="t(\``+dialog+`\`)">`);
+						l = l.replace(`]`, `</a>`);
+						break;
 					case "item":
 						l = l.replace(`[`, `<a onclick="pickUp(`+index+`)">`);
 						l = l.replace(`]`, `</a>`);
@@ -238,6 +281,10 @@
 			stripped = div.textContent || "";
 			div.remove();
 
+			console.log(content);
+
+			stripped = stripped.split("");
+
 			var speed = s;
 			var counter = 0;
 			var charcount = 0;
@@ -252,7 +299,7 @@
 				}
 				if (counter==speed) {
 					counter = 0;
-					let char = stripped.charAt(charcount);
+					let char = stripped[charcount];
 					if (char.match(/[.:!?]/)) {
 						pause = 12+s;
 					} else if (char.match(",")) {
@@ -265,7 +312,7 @@
 					element.innerHTML += char;
 					charcount++;
 				}
-				if (charcount>stripped.length) {
+				if (charcount==stripped.length) {
 					element.innerHTML = content;
 				} else {
 					counter++;
