@@ -209,6 +209,9 @@
 								}
 								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(broken_tooltips[`+i+`])`+extra+`">`);
 								l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
+							} else {
+								l = l.replace(`OPENBRACKETCHAR`, ``);
+								l = l.replace(`CLOSEDBRACKETCHAR`, ``);
 							}
 						} else {
 							l = l.replace(`OPENBRACKETCHAR`, ``);
@@ -364,6 +367,10 @@
 
 		function dropItem(index) {
 			if (current_container != game) { return }
+			console.log(index);
+			if (!('objects' in kids[kids.current].scene)) {
+				kids[kids.current].scene.objects = [];
+			}
 			kids[kids.current].scene.objects.push(kids[kids.current].inventory[index]);
 			kids[kids.current].inventory.splice(index, 1);
 			setScene();
