@@ -42,7 +42,7 @@
 				inventory: [OBJECT.kGLOWSTICK, OBJECT.kGLOWSTICK, OBJECT.kBOMB, OBJECT.kSPYPEN, OBJECT.kWATCH],
 				bgcolor: "#fff27d",
 				strongcolor: "#fff947",
-				scene: SCENE.oasis,
+				scene: SCENE.wall_golem,
 				speed: 3,
 				state: "neutral"
 			},
@@ -196,21 +196,23 @@
 							c = obj.state.neutral;
 							s = "neutral";
 						}
+						l = l.replace("]", "CLOSEDBRACKETCHAR");
+						l = l.replace("[", "OPENBRACKETCHAR");
 						if (kids.current in c) {
-							let dialog = "<b>"+obj.name+": </b>"+c[kids.current][c[kids.current][0]];
-							let i = broken_tooltips.length;
-							broken_tooltips.push(dialog);
-
-							let extra = "";
-							if (c[kids.current][0] < c[kids.current].length-1) {
-								extra = ";CHAR[kids[kids.current].scene.chars["+index+"]].state."+s+"[kids.current][0]++;setScene(true)";
+							if (c[kids.current][c[kids.current][0]] != "") {
+								let dialog = "<b>"+obj.name+": </b>"+c[kids.current][c[kids.current][0]];
+								let i = broken_tooltips.length;
+								broken_tooltips.push(dialog);
+								let extra = "";
+								if (c[kids.current][0] < c[kids.current].length-1) {
+									extra = ";CHAR[kids[kids.current].scene.chars["+index+"]].state."+s+"[kids.current][0]++;setScene(true)";
+								}
+								l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(broken_tooltips[`+i+`])`+extra+`">`);
+								l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
 							}
-							l = l.replace("]", "CLOSEDBRACKETCHAR");
-							l = l.replace("[", "OPENBRACKETCHAR");
-							l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(broken_tooltips[`+i+`])`+extra+`">`);
-							l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
 						} else {
-							return ""
+							l = l.replace(`OPENBRACKETCHAR`, ``);
+							l = l.replace(`CLOSEDBRACKETCHAR`, ``);
 						}
 						break;
 					case "item":

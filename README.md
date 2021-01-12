@@ -9,7 +9,7 @@ feat. three kids who are way in over their heads + a meditative atmosphere
 ### code (40% progress)
 * ~~scene + object system~~
 * ~~inventory system~~
-* characters system
+* ~~characters system~~
 * kitty's special action
 * pup's special action
 * bird's special action
