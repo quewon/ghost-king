@@ -197,9 +197,9 @@
 							s = "neutral";
 						}
 						if (kids.current in c) {
-							let dialog = c.line;
-
-							dialog += "<br /><b>"+obj.name+": </b>"+c[kids.current][c[kids.current][0]];
+							let dialog = "<b>"+obj.name+": </b>"+c[kids.current][c[kids.current][0]];
+							let i = broken_tooltips.length;
+							broken_tooltips.push(dialog);
 
 							let extra = "";
 							if (c[kids.current][0] < c[kids.current].length-1) {
@@ -207,7 +207,7 @@
 							}
 							l = l.replace("]", "CLOSEDBRACKETCHAR");
 							l = l.replace("[", "OPENBRACKETCHAR");
-							l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(\``+dialog+`\`,)`+extra+`">`);
+							l = l.replace(`OPENBRACKETCHAR`, `<a onclick="t(broken_tooltips[`+i+`])`+extra+`">`);
 							l = l.replace(`CLOSEDBRACKETCHAR`, `</a>`);
 						} else {
 							return ""
@@ -232,13 +232,23 @@
 
 			element.innerHTML = "";
 
-			let div = document.createElement("div");
 			let stripped = content.replace(/<br \/>/g, "¶");
-			div.innerHTML = stripped;
-			stripped = div.textContent || "";
-			div.remove();
+			stripped = stripped.split(/(?<=\/b>)/g);
 
-			stripped = stripped.split("");
+			if (stripped.length==1) {
+				let div = document.createElement("div");
+				div.innerHTML = stripped[0];
+				stripped[0] = div.textContent;
+				div.remove();
+				stripped = stripped[0].split("");
+			} else if (stripped.length > 1) {
+				let div = document.createElement("div");
+				div.innerHTML = stripped[1];
+				stripped[1] = div.textContent;
+				div.remove();
+				stripped[1] = stripped[1].split("");
+				stripped = stripped.flat();
+			}
 
 			var speed = s;
 			var counter = 0;

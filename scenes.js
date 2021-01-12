@@ -68,7 +68,8 @@ var SCENE = {
 		},
 		exits: [
 			{
-				line: "the [wall golem] stands proud. sort of."
+				line: "the [wall golem] stands proud. sort of.",
+				destination: "stone_wall"
 			}
 		]
 	},
