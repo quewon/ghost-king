@@ -79,7 +79,8 @@
 					age: 12<br /><br />`;
 
 		var settings = {
-			typing_speed: 3
+			typing_speed: 3,
+			typing: false
 		};
 
 		var char_info = document.getElementById("character_info");
@@ -233,6 +234,7 @@
 		}
 
 		function type(element, content, s) {
+			settings.typing = true;
 			s = s || settings.typing_speed;
 
 			element.innerHTML = "";
@@ -284,6 +286,7 @@
 				}
 				if (charcount==stripped.length) {
 					element.innerHTML = content;
+					settings.typing = false;
 				} else {
 					counter++;
 					requestAnimationFrame(animate);
@@ -359,7 +362,7 @@
 			kids[kids.current].scene.objects.splice(index, 1);
 			setScene();
 			if (kids[kids.current].inventory.length==0) {
-				t("inventory: empty");
+				t("inventory: empty", true);
 				return
 			}
 			t(parseList("inventory", kids[kids.current].inventory)+"<br /><br /><i>right click items to unload them</i>", true);
@@ -392,7 +395,10 @@
 				menu_tooltip.textContent = "";
 			}
 			if ('function' in icon) {
-				button.onclick = icon.function;
+				button.onclick = function() {
+					if (settings.typing) { return }
+					icon.function()
+				}
 			}
 			menu.appendChild(button);
 		}
@@ -409,7 +415,10 @@
 			} else {
 				current_container.appendChild(tbox);
 			}
-			tbox.onclick = function(e){ this.remove() };
+			tbox.onclick = function(e){
+				if (settings.typing) { return }
+				this.remove()
+			};
 			if (speed==true) { tbox.innerHTML = tooltip }
 			else {
 				speed = speed || settings.typing_speed;
